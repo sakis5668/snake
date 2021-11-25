@@ -1,5 +1,7 @@
-import tkinter as tk
+import sys
+from os import path
 from random import randint
+import tkinter as tk
 from PIL import Image, ImageTk
 
 MOVE_INCREMENT = 20
@@ -25,10 +27,15 @@ class Snake(tk.Canvas):
 
     def load_assets(self):
         try:
-            self.snake_body_image = Image.open("./assets/snake.png")
+            bundle_dir = getattr(sys, "_MEIPASS", path.abspath(path.dirname(__file__)))
+            path_to_snake = path.join(bundle_dir, "assets", "snake.png")
+            # self.snake_body_image = Image.open("./assets/snake.png")
+            self.snake_body_image = Image.open(path_to_snake)
             self.snake_body = ImageTk.PhotoImage(self.snake_body_image)
 
-            self.food_image = Image.open("./assets/food.png")
+            path_to_food = path.join(bundle_dir, "assets", "food.png")
+            # self.food_image = Image.open("./assets/food.png")
+            self.food_image = Image.open(path_to_food)
             self.food = ImageTk.PhotoImage(self.food_image)
         except IOError as error:
             print(error)
@@ -36,7 +43,8 @@ class Snake(tk.Canvas):
 
     def create_objects(self):
         self.create_text(
-            100, 12, text=f"Score: {self.score} (speed: {moves_per_second})", tag="score", fill="#fff", font=("TkDefaultFont", 14)
+            100, 12, text=f"Score: {self.score} (speed: {moves_per_second})", tag="score", fill="#fff",
+            font=("TkDefaultFont", 14)
         )
         for x_position, y_position in self.snake_positions:
             self.create_image(x_position, y_position, image=self.snake_body, tag="snake")
